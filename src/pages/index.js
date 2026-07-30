@@ -1,6 +1,5 @@
 import React from 'react';
 import Layout from '@theme/Layout';
-import Link from '@docusaurus/Link';
 
 export default function Home() {
   return (
@@ -11,9 +10,6 @@ export default function Home() {
         <p>Si tu est arrivé ici par hazard, sache que ce site est la sauvegarde 💾 de mon cerveau fatigué...</p>
         <p>j'y note quelques astuce, m'évitant ainsi de m'encombrer la tête 😅</p>
         <p>Si cela peut servir à d'autres, profites 😉</p>
-        <Link className="button button--primary" to="/docs/welcome">
-          Get Started
-        </Link>
       </main>
     </Layout>
   );
