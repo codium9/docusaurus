@@ -34,7 +34,11 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'My Site',
+        title: '',
+        logo: {
+          alt: 'Logo',
+          src: 'iot.png',
+        },
         items: [
           { type: 'docSidebar', sidebarId: 'tutorialSidebar', position: 'left', label: 'Docs' },
           { href: 'https://github.com/codium9/docusaurus', label: 'GitHub', position: 'right' },
