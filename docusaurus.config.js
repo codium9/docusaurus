@@ -3,7 +3,7 @@ const { themes } = require('prism-react-renderer');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'My Wiki',
+  title: 'GitBook',
   tagline: 'wiki',
   url: 'https://wiki.xscale.fr',
   baseUrl: '/',
@@ -41,7 +41,7 @@ const config = {
         },
         items: [
           { type: 'docSidebar', sidebarId: 'tutorialSidebar', position: 'left', label: '📚 Wiki' },
-          { href: 'https://github.com/codium9/docusaurus', label: 'GitHub', position: 'right' },
+          { href: 'https://github.com/codium9/docusaurus', position: 'right', className: 'header-github-link', 'aria-label': 'GitHub' },
         ],
       },
       prism: {
