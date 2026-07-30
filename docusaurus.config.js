@@ -40,7 +40,7 @@ const config = {
           src: 'travaux-routiers.png',
         },
         items: [
-          { type: 'docSidebar', sidebarId: 'tutorialSidebar', position: 'left', label: '📚 Wiki' },
+          { type: 'docSidebar', sidebarId: 'tutorialSidebar', position: 'left', label: '🎯Wiki' },
           { href: 'https://github.com/codium9/docusaurus', position: 'right', className: 'header-github-link', 'aria-label': 'GitHub' },
         ],
       },
