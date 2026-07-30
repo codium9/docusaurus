@@ -37,10 +37,10 @@ const config = {
         title: '',
         logo: {
           alt: 'Logo',
-          src: 'iot.png',
+          src: 'travaux-routiers.png',
         },
         items: [
-          { type: 'docSidebar', sidebarId: 'tutorialSidebar', position: 'left', label: 'Docs' },
+          { type: 'docSidebar', sidebarId: 'tutorialSidebar', position: 'left', label: '📚 Wiki' },
           { href: 'https://github.com/codium9/docusaurus', label: 'GitHub', position: 'right' },
         ],
       },
