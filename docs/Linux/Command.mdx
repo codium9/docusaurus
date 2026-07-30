@@ -61,13 +61,15 @@ printf "failed \n"
 fi
 ```
 
-<Aside>
+:::note
+
 variante one-liner
 
 ```bash
 bash -c 'exec 3<> /dev/tcp/'localhost'/'22';echo $?' 2>/dev/null
 ```
-</Aside>
+
+:::
 
 ### Tunnel SSH
 Exemple d'un tunnel http pour mise a jour yum
@@ -85,7 +87,7 @@ puis taper la commande suivante
 ssh -D 1080 root@machine 2
 ```
 
-<Badge text="Attention" variant="caution" />
+ 
 puis taper la commande désiré sur la machine 1 depuis un autre terminal (très important)
 
 
@@ -95,9 +97,11 @@ puis taper la commande désiré sur la machine 1 depuis un autre terminal (très
 yum install --downloadonly --downloaddir='path' 'package'
 ```
 
-<Aside>
+:::note
+
 Prérequis : Installer le package yum-downloadonly
-</Aside>
+
+:::
 
 
 ### File System (visualisation)
@@ -106,9 +110,11 @@ Prérequis : Installer le package yum-downloadonly
 umask 022
 ```
 
-<Aside>
+:::note
+
 (avec 022 = chmod 755)
-</Aside>
+
+:::
 
 ### Affichage espace libre ou occupé
 #### Affichage espace occupé en Mo

@@ -48,10 +48,12 @@ db2adutl delete logs chain 2 database 'DB' without prompting
 db2adutl delete logs between S0000282 and S0000292 database 'DB'
 ```
 
-<Aside>
+:::note
+
 il se peut que lors d'un refresh de base DB2, des logs DB2 existe sur l'environnemnt cible et que celles-ci soient confondus avec les logs de la base source.
 Dans ce cas présent, le plus simple étant de supprimer totalement les logs db2 encore présent sur l'environnement cible
-</Aside>
+
+:::
 
 
 

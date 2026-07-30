@@ -19,9 +19,11 @@ Editer le fichier /etc/DIR_COLORS et remplacer
 par
 `DIR 00;32       # directory`
 
-<Aside>
+:::note
+
     Les répertoires vont apparaitre en vert au lieu de bleu
-</Aside>
+
+:::
 
 ### Clear screen "like" en shell
 ```bash
@@ -41,9 +43,11 @@ $((a + 200))      # Add 200 to $a
 $(($RANDOM%200))  # Random number 0..199
 ```
 
-<Aside>
+:::note
+
     Permet de faire un calcul , notamment dans ce cas précis, ou un résultat égale à 0 fait planter expr
-</Aside>
+
+:::
 
 
 ### Lire une entrée STDIN
@@ -54,7 +58,8 @@ read ans
 echo $ans
 ```
 
-<Aside type="tip">
+:::tip
+
 lecture STDIN si option, sinon, fichier
     ```bash
     test() { 
@@ -65,7 +70,8 @@ lecture STDIN si option, sinon, fichier
     fi 
     }
     ```
-</Aside>
+
+:::
 
 ### Gestion des options dans un menu
 
@@ -437,9 +443,11 @@ awk 'sub(/^M/, "");1' <ficsource> <ficmaj>
 awk -F"\t"  '{ print $56 }'
 ```
 
-<Aside>
+:::note
+
     Afficher le premier champ de chaque ligne avec tabulation en séparateur de champ
-</Aside>
+
+:::
 
 
 #### Remplacer EXPR par AWK
@@ -485,9 +493,11 @@ sed -i 's/^.\{10\}//g' fichier.txt
 ```bash
 <code>sed -n 1p check_toto.txt
 ```
-<Aside>
+:::note
+
     Ici la première ligne
-</Aside>
+
+:::
 
 
 #### Savoir si une variable est numérique
@@ -516,9 +526,11 @@ done
 ```bash
 DIR="$(readlink -f "$(dirname "$0")/../data/transfers")"
 ```
-<Aside>
+:::note
+
 readlink : permet le suivi des liens
-</Aside>
+
+:::
 
 
 
@@ -539,17 +551,23 @@ find / -xdev -type f -exec grep -i toto {} /dev/null \;
 ```
 
 
-<Aside>
+:::note
+
     recherche récursive de tous les fichiers qui contiennent le mot « toto » (ou TOTO… ou ToTo…)
-</Aside>
 
-<Aside type="caution">
+:::
+
+:::caution
+
     Attention : « \; » obligatoire à la fin de la commande
-</Aside>
 
-<Aside type="tip">
+:::
+
+:::tip
+
     L’option xdev permet de ne pas franchir les limites du systeme de fichiers
-</Aside>
+
+:::
 
 #### Purge de fichiers
 ```

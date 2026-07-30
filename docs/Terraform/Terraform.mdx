@@ -16,10 +16,12 @@ name = "bitslovers-nlb"
 }
 ```
 
-<Aside type="tip">
+:::tip
+
 Si la variable "lb_type" est valorisée à "network-lb", alors le module ou la ressource est déployé  
 Lien : [https://www.bitslovers.com/terraform-count/](https://www.bitslovers.com/terraform-count/)  
-</Aside>
+
+:::
 
 #### Mode "string"
 
@@ -27,10 +29,12 @@ Lien : [https://www.bitslovers.com/terraform-count/](https://www.bitslovers.com/
 bucket_name = var.test == true ? "dev" : "prod"
 ```
 
-<Aside type="tip">
+:::tip
+
 Lire : Si la variable de test contient la valeur "true", alors bucket_name = dev , sinon prod  
 Lien : [https://spacelift.io/blog/terraform-functions-expressions-loops](https://spacelift.io/blog/terraform-functions-expressions-loops)  
-</Aside>
+
+:::
 
 ### Utiliser une liste d'items dans un fichier texte
 
