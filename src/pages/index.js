@@ -4,10 +4,10 @@ import Link from '@docusaurus/Link';
 
 export default function Home() {
   return (
-    <Layout title="Home">
+    <Layout title="GitBook">
       <main style={{ padding: '2rem', textAlign: 'center' }}>
-        <h1>Welcome to My Site</h1>
-        <Link className="button button--primary" to="/docs/intro">
+        <h1>👋😊 Welcome</h1>
+        <Link className="button button--primary" to="/docs/index.mdx">
           Get Started
         </Link>
       </main>
