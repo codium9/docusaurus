@@ -1,0 +1,148 @@
+---
+title: Lexique services
+sidebar_position: 1
+---
+
+### 🧮 **Calcul (Compute)**
+	- EC2 (Elastic Compute Cloud) : Serveurs virtuels à la demande avec gestion totale de l'OS.
+	- Lambda : Exécution de code serverless déclenchée par des événements (max 15 min).
+	- Fargate : Moteur de calcul serverless pour exécuter des conteneurs sans gérer de serveurs.
+	- ECS (Elastic Container Service) : Orchestrateur de conteneurs Docker propriétaire AWS.
+	- EKS (Elastic Kubernetes Service) : Service Kubernetes managé pour les architectures hybrides ou open-source.
+	- Auto Scaling Group (ASG) : Ajuste dynamiquement le nombre d'instances pour garantir la disponibilité.
+	- Batch : Planification de travaux de calcul intensifs par lots (jobs).
+	- App Runner : Service simplifié pour déployer des applications web conteneurisées à partir du code.
+	- Lightsail : Serveurs privés virtuels (VPS) simplifiés pour les besoins à faible complexité.
+	- Outposts : Extension des services AWS dans votre propre centre de données local.
+
+### 🗃️ **Stockage (Storage)**
+	- S3 (Simple Storage Service) : Stockage d'objets scalable pour data lakes, backups et fichiers statiques.
+	- S3 Glacier (Instant/Flexible/Deep) : Archivage de données à bas coût avec différents délais de récupération.
+	- S3 Transfer Acceleration : Utilise le réseau mondial de points de présence d'AWS (Edge Locations) pour accélérer l'upload et le download de fichiers vers vos buckets S3 sur de longues distances.
+	- EBS (Elastic Block Store) : Volumes de stockage par blocs persistants pour les instances EC2.
+	- EFS (Elastic File System) : Système de fichiers Linux partagé accessible par des centaines d'instances.
+	- FSx for Windows : Système de fichiers SMB natif pour les applications Windows.
+	- FSx for Lustre : Stockage haute performance pour le calcul intensif (HPC) et le ML.
+	- FSx for NetApp ONTAP : Migration de charges de travail NetApp on-premise sans changement de code.
+	- Storage Gateway : Connecte les applications locales au stockage cloud (File, Volume, Tape). ==> stockage hybrid on-cloud
+	- Backup : Gestion centralisée et automatisation des sauvegardes à travers les services AWS.
+	- Snowball Edge / Snowcone : Transfert physique de données massives ou calcul en local sans internet.
+
+### 🌐 **Réseau (Networking)**
+	- VPC (Virtual Private Cloud) : Réseau virtuel isolé pour définir vos propres sous-réseaux et routages.
+	- Route 53 : Service DNS géré avec politiques de routage avancées (latence, failover, géo).
+	- CloudFront : CDN mondial pour mettre en cache le contenu et réduire la latence utilisateur.
+			- OAI : Origin Access Identity pour sécuriser l'accès à un bucket S3 via CloudFront.
+	- ALB (Application Load Balancer) : Répartition de charge intelligente au niveau applicatif (HTTP/HTTPS).
+	- NLB (Network Load Balancer) : Répartition de charge ultra-performante au niveau réseau (TCP/UDP).
+	- Global Accelerator : Optimise le trajet réseau via des IP statiques pour la performance mondiale.
+	- API Gateway : Point d'entrée sécurisé pour exposer et gérer des API à grande échelle. (caching API possible pour données peu rafraîchies)
+	- Direct Connect : Connexion réseau privée et dédiée entre votre centre de données et AWS.
+	- VPC Peering : Connexion privée entre deux VPC pour un trafic sécurisé et à faible latence. (valable pour peu de vpc / même région et account)
+	- Transit Gateway : Hub central pour simplifier le réseau entre des milliers de VPC et sites distants.
+	- CloudHub : Service de routage pour connecter des réseaux hybrides (on-premise, Direct Connect, VPN).
+	- PrivateLink / VPC Endpoints : Accès sécurisé aux services AWS sans exposition à l'internet public.
+	- Wavelength / Local Zones : Extension de l'infrastructure AWS pour la 5G et les zones métropolitaines à faible latence.
+
+### 🛢️ **Bases de données (Databases)**
+	- RDS : Bases relationnelles managées (Multi-AZ pour la résilience, Read Replicas pour le scaling).
+	- Aurora : Base relationnelle haute performance compatible MySQL/Postgres avec auto-scaling.
+	- DynamoDB : Base NoSQL clé-valeur offrant une latence inférieure à 10ms à n'importe quelle échelle.
+	- DynamoDB DAX : Cache en mémoire pour accélérer les lectures DynamoDB de 10x.
+	- ElastiCache : Service de cache en mémoire pour accélérer les applications.
+			- Redis : Cache en mémoire avec structures de données avancées (listes, sets, sorted sets).
+			- Memcached : Cache en mémoire simple pour les données temporaires.
+	- Redshift : Entrepôt de données pour l'analyse décisionnelle et les requêtes SQL massives.
+	- Neptune : Base de données orientée graphes pour les relations complexes (réseaux sociaux).
+	- DocumentDB : Base de données de documents managée compatible MongoDB.
+	- MemoryDB for Redis : Base de données en mémoire ultra-rapide et durable.
+
+### 🤖 **IA, Machine Learning et Données**
+	- SageMaker : Plateforme complète pour entraîner et déployer des modèles de Machine Learning.
+	- Bedrock : Accès aux modèles de fondation (LLM) pour l'IA générative via API.
+	- Rekognition : Analyse d'images et de vidéos (objets, texte, visages).
+	- Comprehend : Analyse de texte brut par NLP (sentiments, thèmes, entités).
+	- Polly : Conversion de texte en parole réaliste.
+	- Transcribe : Transcription automatique de fichiers audio en texte.
+	- Translate : Traduction automatique de textes entre de nombreuses langues.
+	- Lex : Service pour créer des interfaces conversationnelles (Chatbots).
+	- Textract : Extraction automatique de texte et de données à partir de documents scannés. (image ou pdf)
+	- Kendra : Moteur de recherche intelligente pour entreprises basé sur le ML.
+
+### 📊 **Analytique et Big Data**
+	- Athena : Requêtez vos données stockées dans S3 directement en SQL, sans serveur ni chargement préalable.
+	- Glue : Service d'intégration de données (ETL) et catalogue pour data lakes.
+	- Glue DataBrew : Outil visuel de préparation de données qui permet de nettoyer et de normaliser des données sans écrire de code
+	- Kinesis Data Streams : Capture de flux de données en temps réel à grande échelle.
+	- Kinesis Data Firehose : Chargement automatique de flux de données vers S3, Redshift ou OpenSearch.
+	- Kinesis Data Analytics : transformer et d'analyser des flux de données en temps réel en utilisant du SQL standard ou Apache Flink
+	- EMR (Elastic MapReduce) : Traitement de données massives avec Spark, Hadoop et Hive.
+	- QuickSight : Service de Business Intelligence pour visualiser les données via des tableaux de bord.
+	- OpenSearch : Recherche et analyse de logs opérationnels en temps réel.
+	- Lake Formation : Simplifie la création, la sécurisation et la gestion d'un Data Lake.
+
+### 🔒 **Sécurité et Gouvernance**
+	- AWS Organizations : Gestion centralisée de plusieurs comptes AWS avec facturation consolidée et hiérarchie par Unités Organisationnelles (OU).
+	- SCP (Service Control Policy) : Politiques de gouvernance d'Organisations définissant les limites de permissions maximales (Guardrails) pour les comptes.
+	- RAM (Resource Access Manager) : Partage sécurisé de ressources (VPC Subnets, Transit Gateways) entre plusieurs comptes au sein d'une organisation.
+	- IAM (Identity and Access Management) : Gestion des identités, des rôles et des politiques d'accès (JSON) selon le principe du moindre privilège.
+	- IAM Identity Center : Successeur d'AWS SSO pour l'accès centralisé aux comptes et aux applications SaaS.
+	- IAM Access Advisor : Analyse l'usage des permissions IAM pour identifier les permissions inutilisées et affiner les politiques d'accès.
+	- IAM Access Analyzer : Détection des ressources partagées publiquement ou avec des comptes externes pour renforcer la sécurité.
+	- KMS (Key Management Service) : Service géré pour la création, la rotation et le contrôle des clés de chiffrement.
+	- Secrets Manager : Stockage, gestion et rotation automatique des secrets et identifiants de bases de données.
+	- WAF (Web Application Firewall) : Protection des applications web contre les exploits courants (SQLi, XSS) au niveau de l'ALB ou de CloudFront.
+	- Firewall Manager : Gestion centralisée des règles de sécurité (WAF, Shield) à travers tous les comptes et ressources.
+	- Shield : Protection anti-DDoS (Standard activé par défaut, Advanced pour une protection étendue).
+	- GuardDuty : Détection intelligente des menaces via l'analyse continue des logs (VPC, CloudTrail, DNS).
+	- Inspector : Analyse automatisée des vulnérabilités logicielles pour les instances EC2, les conteneurs (ECR) et Lambda.
+	- Macie : Utilisation du ML pour découvrir et protéger les données sensibles (PII) stockées dans S3.
+	- Cognito : Gestion de l'identité des utilisateurs (User Pools) et accès temporaires aux ressources AWS (Identity Pools) pour les apps web/mobiles.
+	- Security Hub : Console centrale agrégeant les alertes de sécurité de plusieurs services (GuardDuty, Inspector, Macie).
+	- Security Lake : Centralise et normalise (format OCSF) automatiquement vos logs de sécurité multi-comptes et multi-régions dans un data lake S3 pour faciliter l'analyse et l'archivage.
+	- Artifact : Portail en libre-service pour accéder aux rapports de conformité d'AWS (ISO, PCI, SOC).
+	- Certificate Manager (ACM) : Provisionnement et gestion des certificats SSL/TLS pour les services AWS (ALB, CloudFront).
+	- CloudHSM : Module de sécurité matériel pour la gestion des clés cryptographiques avec contrôle total.
+
+### 📨 **Intégration et Migration**
+	- SQS (Simple Queue Service) : File d'attente de messages pour découpler les microservices.
+	- SNS (Simple Notification Service) : Notifications push et messages Pub/Sub vers plusieurs abonnés.
+	- EventBridge : Service d'intégration serverless qui permet :
+		- Bus d'événements : Connecter des applications via des données en temps réel (Découplage).
+		- Scheduler : Planifier des tâches récurrentes (remplace le Cron Linux).
+		- Pipes : Créer des intégrations point-à-point simples entre services.
+	- Step Functions : Orchestration de workflows complexes sous forme de machines à états.
+	- AppSync : Service GraphQL managé pour les applications web et mobiles en temps réel.
+	- DMS (Database Migration Service) : Moteur de réplication de données en temps réel - principalement utilisé pour de la migration BDD, mais pas que.
+	- MGN (Application Migration Service) : Migration de serveurs physiques ou virtuels vers EC2.
+	- DataSync : Accélération des transferts de données entre stockage local et AWS.
+	- MQ : Service de courtage de messages compatible avec les protocoles standard (AMQP, MQTT, STOMP).
+
+### 🔎 **Gestion et Monitoring**
+	- CloudWatch : Surveillance des métriques, des logs et création d'alarmes de performance.
+	- CloudTrail : Journalisation de toutes les actions effectuées via les API AWS (audit).
+	- Config : Historique des modifications de ressources et vérification de la conformité.
+	- Systems Manager (SSM) : Gestion centralisée des configurations, correctifs et accès aux serveurs.
+	- Trusted Advisor : Recommandations automatiques pour réduire les coûts et améliorer la sécurité.
+	- Compute Optimizer : Recommandations basées sur les métrics cloudwatch (CPU/RAM) pour optimiser les ressources de calcul (EC2, Lambda, EBS).
+	- S3 Storage Lens : Outil d'analyse avancé pour comprendre les tendances d'utilisation et d'accès à vos données S3.
+
+### 🖥️ **End User Computing et Gestion**
+	- Control Tower : Mise en place d'une "Landing Zone" multi-comptes sécurisée et conforme par défaut.
+	- CloudFormation : Infrastructure en tant que code pour automatiser le déploiement des ressources.
+	- WorkSpaces : Bureaux virtuels (DaaS) persistants pour le travail à distance.
+	- AppStream 2.0 : Streaming d'applications spécifiques vers n'importe quel navigateur sans installation.
+
+### 🏗️ **Service PaaS**
+	- Amplify : Plateforme de développement d'applications web et mobiles full-stack avec backend serverless.
+	- Lightsail : Service PaaS simplifié pour les petites applications web, blogs ou sites e-commerce.(full managed VPS)
+	- Elastic Beanstalk : Déploiement facile d'applications web dans des environnements managés (EC2, RDS). Ici, on ne gère pas les serveurs, mais on peut choisir la configuration (type d'instance, autoscaling, etc).
+	- App Runner : Service entièrement managé pour déployer des applications conteneurisées à partir du code source ou d'une image de conteneur.
+
+### 🧩 **Autres services**
+	- Elastic Disaster Recovery (DRS) : Service de reprise après sinistre pour répliquer en continu vos serveurs sur AWS et les restaurer rapidement en cas de panne.
+	- Snowball Edge : Dispositif de transfert de données physique avec capacité de calcul pour les environnements à faible connectivité.
+	- Snowcone : Dispositif de transfert de données physique ultra-portable pour les environ
+	- Outposts : Extension de l'infrastructure AWS dans votre propre centre de données pour les applications nécessitant une latence ultra-faible ou des exigences de résidence des données.
+	- Trusted Advisor : Recommandations automatiques pour optimiser les coûts, la sécurité et les performances de votre environnement AWS.
+	- AWS Bud

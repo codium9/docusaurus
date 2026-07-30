@@ -1,0 +1,456 @@
+---
+title: Note examen AWS SAA
+sidebar_position: 2
+---
+
+### 🌐 **Réseau (Networking)**
+
+##### **Comparatif : Solutions Réseaux**
+
+| Solution         | Type de connexion    | Usage principal                         | Caractéristique clé                               |
+| :--------------- | :------------------- | :-------------------------------------- | :------------------------------------------------ |
+| VPC Peering      | Inter-VPC (Privé)    | Connecter deux VPC 1-à-1.               | Pas de routage transitif. Gratuit (hors data).    |
+| VPC Sharing      | Intra-VPC (Partagé)  | Plusieurs comptes dans un même VPC.     | Centralisation via RAM et AWS Organizations.      |
+| Transit Gateway  | Hub-and-Spoke        | Connecter des milliers de VPC et sites. | Supporte le routage transitif (A -> B -> C).      |
+| PrivateLink      | Interface Endpoint   | Accès privé à un service spécifique.    | Pas de peering nécessaire. Sécurité maximale.     |
+| Site-to-Site VPN | Hybride (Internet)   | Connecter On-prem vers AWS via IPsec.   | Rapide à setup, mais dépend de l'Internet public. |
+| Direct Connect   | Hybride (Dédié)      | Connexion physique dédiée (Fibre).      | Haute performance, latence stable, coût élevé.    |
+| Client VPN       | Utilisateur vers VPC | Accès distant pour les employés.        | Basé sur OpenVPN, accès sécurisé aux ressources.  |
+
+Points clés à retenir :
+1. Routage Transitif : Seule la Transit Gateway permet de faire passer du trafic à travers un hub vers d'autres destinations de manière transparente.
+2. Gateway Endpoints vs Interface Endpoints : Utilisez des Gateway Endpoints uniquement pour S3 et DynamoDB (gratuit). Pour tout le reste, utilisez Interface Endpoints (PrivateLink).
+3. Sécurité Hybride : Préférez Direct Connect pour la stabilité et VPN pour le backup ou les besoins rapides.
+4. Éviter l'exposition : Utilisez toujours des VPC Endpoints pour que votre trafic vers les services AWS ne quitte jamais le réseau privé global d'Amazon.
+
+##### **Comparatif : VPC Peering vs VPC Sharing**
+
+| Caractéristique | VPC Peering                         | VPC Sharing                                |
+| :-------------- | :---------------------------------- | :----------------------------------------- |
+| Concept         | Connecte 2 VPC indépendants.        | Partage des subnets d'un même VPC.         |
+| Comptes         | Même ou différents comptes.         | Uniquement au sein d'une AWS Organization. |
+| Connectivité    | Requiert des tables de routage.     | Native (car même VPC).                     |
+| Responsabilité  | Chaque compte gère son VPC.         | Centralisée (Owner vs Participants).       |
+| Usage idéal     | Connexion ponctuelle entre réseaux. | Infrastructure partagée et interconnectée. |
+
+Points clés à retenir :
+1. VPC Sharing : On partage des "subnets", pas le VPC entier. C'est la clé de la réponse correcte.
+2. RAM (Resource Access Manager) : C'est le service qui permet de partager les ressources entre comptes dans une AWS Organization.
+3. Avantage interconnectivité : Pas de passerelle (gateway) ni de peering à configurer pour que les instances se voient.
+4. Sécurité : Les participants ne peuvent pas voir ou modifier les ressources des autres comptes, même s'ils sont dans le même subnet.
+
+##### **Comparatif : CloudFront vs Global Accelerator**
+
+| Caractéristique      | Amazon CloudFront                  | AWS Global Accelerator             |
+| :------------------- | :--------------------------------- | :--------------------------------- |
+| Objectif principal   | Mise en cache de contenu (CDN)     | Optimisation réseau (Routage)      |
+| Mecanisme principal  | Mise en cache (Edge Caching)       | Routage optimise via IP Anycast    |
+| Couche OSI           | Couche 7 (HTTP / HTTPS)            | Couches 3 & 4 (TCP / UDP)          |
+| Type d'IP            | IP dynamiques (via DNS)            | 2 IP Statiques Anycast             |
+| Protocoles supportés | HTTP, HTTPS, WebSockets            | TCP, UDP, HTTP, HTTPS              |
+| Cas d'usage typique  | Vidéo, Images, Sites Web statiques | Gaming, VoIP, IoT, Apps non-HTTP   |
+| Failover (Panne)     | Dépend du TTL DNS (plus lent)      | Instantané (l'IP ne change jamais) |
+| Sécurité             | Intégration native avec WAF        | Protection Shield (DDoS)           |
+
+##### **Comparatif : Types de VIF Direct Connect**
+
+| Type de VIF | Destination                          | Composant associé            |
+| :---------- | :----------------------------------- | :--------------------------- |
+| Public VIF  | Services publics (S3, DynamoDB, SNS) | Adresses IP publiques AWS    |
+| Private VIF | Ressources privées du VPC (EC2, RDS) | Direct Connect Gateway / VGW |
+| Transit VIF | Plusieurs VPC interconnectés         | Transit Gateway              |
+
+##### **Fonctionnalités avancées de CloudFront**
+
+| Fonctionnalité CloudFront | Usage                               | Bénéfice Examen                                          |
+| :------------------------ | :---------------------------------- | :------------------------------------------------------- |
+| Origin Groups             | Haute disponibilité (Failover)      | Bascule auto vers un S3 secondaire si le primaire echoue |
+| Content Type Routing      | Routage par comportement (Behavior) | Envoie les images vers S3 et le dynamique vers l ALB     |
+| Field-level encryption    | Chiffrement de champs specifiques   | Protege les donnees sensibles de bout en bout (PII/PCI)  |
+| Geo Restriction           | Blocage de pays                     | Empeche l acces selon la localisation géographique       |
+
+##### **Typde de certificat TLS sur un load balancer**
+
+| Type de certificat  | Usage                                                  | Limite majeure                                         |
+| :------------------ | :----------------------------------------------------- | :----------------------------------------------------- |
+| Certificat Unique   | Un seul nom de domaine (ex: mycorp.com)                | Ne gere pas les sous-domaines ou domaines tiers        |
+| Certificat Wildcard | Un domaine et ses sous-domaines directs (*.mycorp.com) | Incompatible avec un second domaine (ex: yourcorp.com) |
+| Certificat SAN      | Plusieurs noms specifiques dans un seul certificat     | Lourd a mettre a jour car il faut regenerer le fichier |
+| SNI                 | Plusieurs certificats distincts sur un seul ALB        | Solution native pour le multi-domaine et microservices |
+
+### 🗃️ **Stockage (Storage)**
+
+##### **Type de stockage (EBS & Instance Store)**
+
+| Volume         | Type     | Bootable | Persistance | Usage Ideal                 | Performance                     |                Particularité                |
+| :------------- | :------- | :------- | :---------- | :-------------------------- | :------------------------------ | :-----------------------------------------: |
+| gp3            | SSD      | OUI      | Persistant  | Usage standard, boot.       | Equilibre (16k IOPS).           |                                             |
+| io1/io2        | SSD      | OUI      | Persistant  | Bases de donnees critiques. | Tres haute (Max 256k IOPS).     | Supporte le multi-attach EBS (si AZ unique) |
+| st1            | HDD      | NON      | Persistant  | Big Data, Log processing.   | Debit eleve (500 MiB/s).        |                                             |
+| sc1            | HDD      | NON      | Persistant  | Archives froides.           | Cout le plus bas.               |                                             |
+| Instance Store | Ephemere | NON      | Temporaire  | Cache, Tampon, Temp files.  | Latence la plus faible (Local). |                                             |
+
+Points clés à retenir :
+1. HDD = Jamais de Boot. AWS interdit l'installation d'un OS sur du st1 ou sc1.
+2. Instance Store est Bootable, mais attention : il est évanescent. Si l'instance s'arrête, l'OS et les données disparaissent.
+3. Le piège classique : Dans l'examen, on te proposera souvent le st1 pour réduire les coûts d'un volume de démarrage. C'est une réponse fausse.
+
+Bonus : 
+- Fast Snapshot Restore (FSR) : Permet de restaurer un volume EBS à partir d'un snapshot avec des performances optimales dès le premier accès, sans attendre la période de préchauffage habituelle.
+- Modification EBS : On peux modifier à chaud les caractéristiques d'un volume EBS (type, taille, IOPS) sans interruption de service, sauf pour réduire la taille d'un volume.
+
+##### **EC2 Automatic recovery**
+
+| Fonctionnalité           | Compatible EBS | Compatible Instance Store  |
+| :----------------------- | :------------- | :------------------------- |
+| Redémarrage (Reboot)     | OUI            | OUI                        |
+| Récupération (Recovery)  | OUI            | NON                        |
+| Persistance des données  | OUI (Réseau)   | NON (Éphémère)             |
+| Adresse IP / ID Instance | Conservés      | Perdus (si Recovery tenté) |
+
+Points clés à retenir :
+1. CloudWatch Recovery : Ne fonctionne que pour les instances dont le stockage est uniquement basé sur EBS.
+2. Échec matériel : Si l'hôte physique meurt, les données de l'Instance Store meurent avec lui.
+3. Scénario d'examen : Si on demande une récupération automatique avec un budget minimal (pas d'Auto Scaling Group), la bonne réponse est l'alarme CloudWatch avec action "Recover".
+4. Limitation technique : Le Recovery n'est pas supporté si un seul volume Instance Store est attaché à l'instance.
+
+##### **Type de stockage (Hors EBS)**
+
+| Service de stockage | Protocoles supportes | Clients cibles      | Cas d usage                                                                                          |
+| :------------------ | :------------------- | :------------------ | :--------------------------------------------------------------------------------------------------- |
+| Amazon EFS          | NFS uniquement       | Linux, Mac          | Partage de fichiers standard Linux. (multi-AZ par défaut)                                            |
+| FSx for Windows     | SMB uniquement       | Windows             | Partage de fichiers Windows (Active Directory).                                                      |
+| FSx for Lustre      | Lustre (haute perf)  | Linux (HPC)         | Calcul haute performance, Machine Learning.                                                          |
+| FSx for ONTAP       | NFS, SMB, iSCSI      | Windows, Linux, Mac | Environnements mixtes et migration On-premise. (Capacité de tiering automatique pour stockage froid) |
+| FSx for OpenZFS     | NFS uniquement       | Linux, Mac          | Migration de serveurs ZFS locaux.                                                                    |
+| S3 File Gateway     | SMB / NFS            | Windows, Linux, Mac | Interface locale (cache) vers stockage S3                                                            |
+
+
+Points clés à retenir :
+1. Mot-clé SMB ou Windows ACLs : La réponse est obligatoirement FSx for Windows.
+2. Accès mixte Windows/Linux : Si la priorité est la compatibilité Windows (AD/NTFS), FSx for Windows gagne même pour Linux.
+3. Performance brute (Big Data) : Si on parle de calcul haute performance, c'est FSx for Lustre.
+4. Simplicité Linux : Pour du partage pur Linux sans AD, c'est EFS.
+5. Si NFS + SMB : Le seul choix possible dans ce cas est FSx for ONTAP 
+
+#### **Storage Gateway - Comparatif des modes**
+
+| Mode Gateway            | Stockage Primaire      | Cache Local           | Cas d usage ideal                           |
+| :---------------------- | :--------------------- | :-------------------- | :------------------------------------------ |
+| Volume Gateway (Cached) | Amazon S3              | Oui (donnees actives) | Extension de stockage local illimitee       |
+| Volume Gateway (Stored) | Local (On-premises)    | Non (tout est local)  | Backup et Disaster Recovery                 |
+| S3 File Gateway         | Amazon S3              | Oui                   | Acces NFS/SMB aux fichiers S3               |
+| Amazon FSx File Gateway | Amazon FSx for Windows | Oui                   | Performance native Windows/AD dans le cloud |
+
+#### **EFS vs S3 pour le SFTP
+
+| Besoin      | Amazon EFS                   | Amazon S3                                  |
+| :---------- | :--------------------------- | :----------------------------------------- |
+| Nature      | Systeme de fichiers (NFS)    | Stockage Objet                             |
+| Permissions | POSIX (Users/Groups Linux)   | IAM / Bucket Policies                      |
+| Montage EC2 | Natif et simple              | Necessite S3 Mountpoint (moins performant) |
+| Performance | High IOPS (Latence faible)   | Debit eleve mais latence plus forte        |
+| Cas d usage | Home directories, Apps Linux | Data Lakes, Archives, Web assets           |
+
+### 🪣 **S3**
+
+##### **Classe stockage S3**
+
+| Classe S3            | Latence d'accès | Fréquence d'accès idéale   | Coût stockage |
+| :------------------- | :-------------- | :------------------------- | :------------ |
+| Standard             | Millisecondes   | Très fréquente (Quotidien) | Élevé         |
+| Standard-IA          | Millisecondes   | Rare (ex: 2x par an)       | Faible        |
+| One Zone-IA          | Millisecondes   | Rare + Données recréables  | Très faible   |
+| Glacier Instant      | Millisecondes   | Rare (Trimestriel)         | Très faible   |
+| Glacier Deep Archive | Heures          | Très rare (Archive légale) | Minimum       |
+
+Points clés à retenir :
+1. Si l'énoncé dit millisecond latency : Élimine Glacier Flexible et Deep Archive.
+2. Si l'accès est rare (quelques fois par an) : Élimine S3 Standard.
+3. Le compromis parfait entre accès instantané et prix bas pour du stockage massif est le Standard-IA (ou Glacier Instant Retrieval si disponible).
+4. S3 Intelligent-Tiering n'est la bonne réponse que si les patterns d'accès sont inconnus ou changeants. Ici, on sait que c'est 2x par an.
+
+##### **Contraintes de transition S3 Lifecycle**
+
+| Classe de destination   | Délai de transition min. | Règle d'or pour l'examen                                      |
+| :---------------------- | :----------------------- | :------------------------------------------------------------ |
+| S3 Standard-IA          | 30 jours                 | L'objet doit rester 30 jours en Standard avant la transition. |
+| S3 One Zone-IA          | 30 jours                 | Idéal pour les données "re-creatable" après 30 jours.         |
+| S3 Intelligent-Tiering  | 0 jour                   | Transition immédiate possible sans délai minimum.             |
+| S3 Glacier Flexible     | 0 jour                   | Possible immédiatement si l'origine est S3 Standard.          |
+| S3 Glacier Deep Archive | 0 jour                   | Possible immédiatement si l'origine est S3 Standard.          |
+
+##### **EFS**
+
+| Caractéristique   | Bursting Throughput                           | Provisioned Throughput                          |
+| :---------------- | :-------------------------------------------- | :---------------------------------------------- |
+| Débit de base     | Proportionnel à la taille (50 Kio/s par Go).  | Fixé par l utilisateur (ex: 100 Mio/s).         |
+| Gestion des pics  | Utilise des crédits accumulés.                | Débit constant garanti 24h/24.                  |
+| Coût              | Inclus dans le prix du stockage.              | Facturation supplémentaire pour le débit.       |
+| Cas d usage idéal | Charges de travail variables / imprévisibles. | Débit élevé constant / petit volume de données. |
+
+#### **Cas d'usage des transferts S3**
+
+| Methode de transfert     | Cas d usage                         | Seuil critique                |
+| :----------------------- | :---------------------------------- | :---------------------------- |
+| Single Put               | Petits fichiers                     | Max 5 Go                      |
+| Multi-part Upload        | Gros fichiers (> 100 Mo recommende) | Obligatoire > 5 Go            |
+| S3 Transfer Acceleration | Longue distance (intercontinental)  | Utilise les Edge Locations    |
+| Direct Connect           | Connexion privee reseau permanente  | Pas specifique a un upload S3 |
+| Snowball                 | Petabytes de donnees (hors ligne)   | Quand le reseau est trop lent |
+
+#### **FinOps : Optimisation des coûts de stockage**
+
+| Strategie FinOps    | Action Concrete                             | Gain Attendu                                           |
+| :------------------ | :------------------------------------------ | :----------------------------------------------------- |
+| S3 Bucket Keys      | Activer au niveau du bucket (SSE-KMS)       | Jusqu a 99% de reduction des frais KMS                 |
+| Intelligent-Tiering | Utiliser pour les patterns d acces inconnus | Automatisation des economies sans frais de retrieval   |
+| Lifecycle Rules     | Configurer des transitions et expirations   | Reduction massive du cout de stockage long terme       |
+| Lifecycle Rules     | Activer "AbortIncompleteMultipartUploads"   | Stop la facturation des fichiers corrompus/incomplets  |
+| S3 Select           | Filtrer les donnees cote S3                 | Baisse des frais de transfert reseau (Data Transfer)   |
+| S3 Storage Lens     | Analyser les rapports d utilisation         | Identification des buckets orphelins ou mal configures |
+
+### 🧮 **Instance EC2**
+
+##### **EC2 Spot Fleet**
+
+| Concept               | Fonctionnement et comportement                                                                                                                       |
+| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Définition Spot Fleet | Une collection (pool) d'instances Spot (et optionnellement On-Demand) qui tente de maintenir une capacité cible au meilleur prix.                    |
+| Annulation de requête | Annuler une requête Spot active n'arrête pas les instances déjà lancées. Vous devez les terminer séparément.                                         |
+| Requête Persistante   | Si une instance Spot est interrompue par AWS, la requête est rouverte automatiquement pour relancer une instance dès que possible.                   |
+| Spot Fleet Scaling    | Contrairement à une requête isolée, une Spot Fleet peut lancer des instances de remplacement si certaines sont terminées pour maintenir la capacité. |
+| Arrêt vs Interruption | Une requête persistante ne se rouvre QUE si AWS interrompt l'instance. Si vous l'arrêtez manuellement, la requête ne se relance pas.                 |
+
+Points clés à retenir :
+1. Stratégie d'allocation : Une Spot Fleet peut piocher dans plusieurs "pools" (combinaisons type d'instance/AZ) pour maximiser la disponibilité.
+2. Gestion des interruptions : AWS envoie un avis d'interruption 2 minutes avant de reprendre l'instance.
+3. Annulation propre : Pour tout supprimer d'un coup, il faut annuler la requête ET cocher l'option pour terminer les instances associées.
+4. Cas d'usage : Batch jobs, calcul scientifique, conteneurs, ou toute charge de travail tolérante aux pannes.
+
+##### **EC2 patch management**
+
+| Concept                 | Définition                                                             | Rôle stratégique                                       |
+| :---------------------- | :--------------------------------------------------------------------- | :----------------------------------------------------- |
+| SSM Patch Manager       | Outil d'automatisation pour l'analyse et l'installation de correctifs. | Maintien de la sécurité et de la conformité du parc.   |
+| Default Host Management | Gestion automatique des EC2 par SSM sans modifier les rôles IAM.       | Réduction maximale de l'effort administratif.          |
+| Patch Baseline          | Référentiel de règles définissant quels patchs sont approuvés.         | Standardisation du niveau de sécurité appliqué.        |
+| Patch Group             | Utilisation de Tags pour associer des instances à une stratégie.       | Ciblage précis des environnements (Prod vs Dev).       |
+| Maintenance Windows     | Plages horaires définies pour l'exécution des tâches de patching.      | Prévention des interruptions de service en production. |
+
+##### **EC2 Auto Scaling - Priorisation d'extinction EC2**
+
+| Priorité | Critere de Terminaison (Default)                  | Objectif                          |
+| :------- | :------------------------------------------------ | :-------------------------------- |
+| 1        | AZ avec le plus d instances                       | Maintenir l équilibre regional.   |
+| 2        | Instance avec l ancienne Launch Config            | Mettre a jour le parc applicatif. |
+| 3        | Instance la plus proche de l heure de facturation | Optimisation des couts FinOps.    |
+| 4        | Selection aleatoire                               | Dernier recours.                  |
+
+Bonus : 
+1. Il existe un mécanisme de "Scale In protection" qui empêche une instance d'être terminée par Auto Scaling, même si elle correspond aux critères de terminaison.C'est utile pour protéger des instances critiques ou en cours de déploiement.
+
+### 🔒 **Sécurité AWS**
+
+##### KMS - Fonctionnalités et cas d'usage
+
+| Fonctionnalite             | Description Technique                               | Cas d usage Examen                                                   |
+| :------------------------- | :-------------------------------------------------- | :------------------------------------------------------------------- |
+| AWS Managed Key            | Creee et geree par AWS pour un service (ex: aws/s3) | Par defaut Gratuit Pas de controle sur la rotation                   |
+| Customer Managed Key (CMK) | Creee et geree par l utilisateur                    | Controle total sur les politiques d acces et la rotation             |
+| Symmetric KMS Keys         | Une seule cle pour chiffrer et dechiffrer           | La majorite des services AWS (S3 EBS RDS)                            |
+| Asymmetric KMS Keys        | Paire de cles publique/privee                       | Signature numerique ou chiffrement hors AWS                          |
+| Multi-Region Keys          | Cles avec le meme ID dans plusieurs Regions         | Disaster Recovery et Replication (CRR) sans re-chiffrement           |
+| Key Rotation               | Changement automatique de la cle tous les ans       | Conformite et securite accrue (Automatique pour CMK)                 |
+| Key Policies               | Document JSON definissant qui peut utiliser la cle  | Securite granulaire (Obligatoire pour les CMK)                       |
+| Alias                      | Nom convivial pour une cle (ex: alias/my-app-key)   | Facilite le code et le changement de cle sans modifier l application |
+
+Points clés à retenir :
+1. Par défault, Une clé KMS est "régionale". Si vous voulez la même clé dans plusieurs régions, vous devez créer une Multi-Region Key.
+
+##### Chiffrement S3 (SSE-S3 VS SSE-KMS)
+
+| Type de chiffrement | Gestion des cles      | Qui chiffre ? | Point Cle Examen                                |
+| :------------------ | :-------------------- | :------------ | :---------------------------------------------- |
+| SSE-S3              | AWS (Managed)         | S3 (Serveur)  | Par defaut, gratuit, aucune gestion de cle      |
+| SSE-KMS             | AWS KMS               | S3 (Serveur)  | Audit CloudTrail obligatoire, rotation des cles |
+| SSE-C               | Client (Fournie)      | S3 (Serveur)  | Vous gérez les cles, AWS ne les stocke pas      |
+| DSSE-KMS            | AWS KMS               | S3 (Serveur)  | Double couche de chiffrement (Compliance)       |
+| CSE                 | Client (KMS ou local) | Client (Toi)  | Données chiffrées AVANT l envoi sur le réseau   |
+
+Points clés à retenir :
+1. Isolation par fichier : SSE-S3 utilise nativement une clé de données unique pour chaque objet stocké.
+2. Minimal overhead : Si l'examen demande la sécurité maximale avec le moins d'effort, SSE-S3 est souvent la réponse car l'isolation par clé est automatique.
+3. Chiffrement par défaut : Il est désormais possible d'activer SSE-S3 au niveau du bucket pour que tout objet soit automatiquement chiffré.
+
+##### WAF (Web ACL)
+
+| Ressource compatible      | Niveau d application    | Cas d usage typique                                       |
+| :------------------------ | :---------------------- | :-------------------------------------------------------- |
+| Amazon CloudFront         | Global (Edge Locations) | Protection au plus proche de l utilisateur final.         |
+| Application Load Balancer | Regional                | Securisation des applications tournant sur EC2 ou ECS.    |
+| Amazon API Gateway        | Regional                | Protection des API REST contre les abus et injections.    |
+| AWS AppSync               | Regional                | Securisation des interfaces de donnees GraphQL.           |
+| Amazon Cognito            | Regional                | Protection des pools d utilisateurs (User Pools).         |
+| AWS App Runner            | Regional                | Securisation des services d application conteneurises.    |
+| AWS Verified Access       | Regional                | Securisation des acces distants aux applications privees. |
+
+#### Policy
+
+| Type de Politique    | Attache a quoi               | Fonction principale                              |
+| :------------------- | :--------------------------- | :----------------------------------------------- |
+| Identity-based       | Utilisateur, Groupe, Role    | Definit ce que l identite peut faire             |
+| Resource-based       | S3, SNS, Role (Trust Policy) | Definit qui peut acceder a cette ressource       |
+| Trust Policy         | Role IAM                     | Definit qui est autorise a endosser le Role      |
+| Permissions Boundary | Utilisateur, Role            | Definit le plafond maximum de droits             |
+| SCP (Organizations)  | Compte, OU                   | Limite les actions possibles au niveau du compte |
+
+### 🏗️ **Gestion d'infrastructure**
+
+##### Cloudformation - Terminologie
+
+| Terme           | Portée (Scope)                | Usage principal                                              |
+| :-------------- | :---------------------------- | :----------------------------------------------------------- |
+| Template        | Fichier (YAML/JSON)           | Le code qui décrit votre infrastructure.                     |
+| Stack           | 1 Compte / 1 Région           | Un ensemble de ressources créées ensemble.                   |
+| StackSet        | Multi-comptes / Multi-régions | Déployer le même template partout d'un coup.                 |
+| Drift Detection | N/A                           | Détecter si quelqu'un a modifié les ressources manuellement. |
+
+Points clés à retenir :
+1. StackSet = Administration centralisée. Vous gérez tout depuis un compte administrateur.
+2. Intégration AWS Organizations : StackSets peut déployer automatiquement des ressources dans chaque nouveau compte créé dans l'organisation.
+3. Mise à jour : Si vous modifiez le template du StackSet, CloudFormation met à jour les stacks correspondantes dans tous les comptes et régions cibles.
+4. Tolérance aux pannes : Vous pouvez définir combien de comptes peuvent échouer avant que le déploiement global ne s'arrête.
+
+### 📈 **Monitoring & Observabilité**
+
+##### CloudWatch Alarms - Types d'actions
+
+| Type de Scaling | Declencheur                  | Cas d usage ideal (Examen)                             |
+| :-------------- | :--------------------------- | :----------------------------------------------------- |
+| Simple          | Alarme CloudWatch (1 regle)  | Charge stable, peu de variations.                      |
+| Step            | Alarme CloudWatch (Paliers)  | Pics agressifs, besoin de granularite.                 |
+| Target Tracking | Metrique cible (ex: 50% CPU) | La configuration par defaut recommandee.               |
+| Scheduled       | Heure/Date precise           | Evenement connu (ex: Black Friday).                    |
+| Predictive      | Modele de Machine Learning   | Trafic cyclique/previsible (ex: tous les jours a 18h). |
+
+
+### 🛢️ **Base de données**
+
+##### Haute dispo vs Performance
+
+| Fonctionnalite       | Mode de replication | Objectif principal                                |
+| :------------------- | :------------------ | :------------------------------------------------ |
+| RDS Multi-AZ         | Synchrone           | Haute disponibilite et zero perte de donnees.     |
+| Read Replica         | Asynchrone          | Performance en lecture et scalabilite.            |
+| EC2 avec MySQL       | Manuelle            | Controle total mais effort administratif maximum. |
+| Cross-Region Replica | Asynchrone          | Desastre Recovery a l echelle mondiale.           |
+
+#### DynamoDB - Type de table
+
+| Caractéristique | Table Standard                      | Global Table                                  |
+| :-------------- | :---------------------------------- | :-------------------------------------------- |
+| Portée          | Une seule région AWS                | Multiples régions AWS                         |
+| Cas d usage     | Application locale ou régionale     | Application mondiale / Disaster Recovery      |
+| Réplication     | Automatique sur 3 AZ                | Automatique entre plusieurs régions           |
+| Complexité      | Faible                              | Élevée (gestion des conflits d ecriture)      |
+| Utile si        | Traffic variable et pic d'activitée | Latence faible ou restauration suite désastre |
+
+#### Elasticache VS DynamoBD
+
+| Caracteristique   | ElastiCache                         | DynamoDB                               |
+| :---------------- | :---------------------------------- | :------------------------------------- |
+| Support physique  | Memoire vive (RAM)                  | Disque SSD                             |
+| Latence type      | Microsecondes                       | Millisecondes                          |
+| Mot-cle examen    | In-memory cache-based               | Serverless, Key-value store            |
+| Gestion du TTL    | Immediate et precise                | Jusqu a 48h pour suppression reelle    |
+| Persistance       | Perte possible si crash sans backup | Garantie (ecriture sur disque)         |
+| Cas d usage ideal | Performance extreme, sessions web   | Simplicite, cout a l usage, Serverless |
+
+
+### 🔀 **Echange de données**
+
+##### SQS - Scaling metric 
+
+| Type de Scaling   | Fonctionnement                                                   | Cas d usage                                      |
+| :---------------- | :--------------------------------------------------------------- | :----------------------------------------------- |
+| Simple Scaling    | Ajoute/supprime un nombre fixe d instances selon un seuil.       | Cas tres basiques, peu flexible.                 |
+| Step Scaling      | Ajoute des instances par paliers (ex: +2 si CPU 60%, +5 si 80%). | Charge qui augmente par bonds brutaux.           |
+| Target Tracking   | Maintient une metrique a une valeur cible (ex: CPU a 50%).       | Charge variable, methode recommandee par AWS.    |
+| Scheduled Scaling | Planifie le scaling a une heure precise.                         | Evenements connus a l avance (ex: Black Friday). |
+
+##### SQS - FIFO vs Standart
+
+| Caracteristique    | File Standard            | File FIFO                         |
+| :----------------- | :----------------------- | :-------------------------------- |
+| Ordre des messages | Meilleur effort          | Ordre strict (First-In-First-Out) |
+| Delivrance         | Au moins une fois        | Exactement une fois               |
+| Doublons possibles | Oui (rarement)           | Non (suppression automatique)     |
+| Debit (TPS)        | Illimite                 | Limite (300 a 3000 par defaut)    |
+| Cas d usage        | Decouplage general, logs | Transactions bancaires, commandes |
+| Nom de la file     | Libellé libre            | Doit se terminer par .fifo        |
+
+##### SQS - Options de délai et de visibilité
+
+| Parametre          | Action                                     | Moment de l effet         |
+| :----------------- | :----------------------------------------- | :------------------------ |
+| Delay Queue        | Retarde l apparition initiale du message   | A l envoi (Producer)      |
+| Visibility Timeout | Cache le message pendant son traitement    | A la reception (Consumer) |
+| Message Timer      | Retarde un message specifique (0 a 15 min) | A l envoi (Individuel)    |
+| WaitTimeSeconds    | Long Polling (attente de message)          | A la reception (API Call) |
+
+##### Kinesis - Options d'optimisation
+
+| Option                     | Pourquoi l utiliser ?                               | Analogie                                       |
+| :------------------------- | :-------------------------------------------------- | :--------------------------------------------- |
+| **Resharding**             | Augmenter la capacite globale (Ecriture + Lecture)  | Ajouter des voies sur une autoroute            |
+| **Enhanced Fan-out**       | Plusieurs lecteurs saturent le flux (Lecture seule) | Donner une voie privee a chaque voiture        |
+| **KPL (Producer Library)** | Optimiser l envoi de petits messages                | Faire du covoiturage pour remplir les voitures |
+
+##### Kinesis Data Streams - Capacités
+
+| Caracteristique           | Kinesis Data Streams Provisioned               | Kinesis Data Streams On-Demand               |
+| :------------------------ | :--------------------------------------------- | :------------------------------------------- |
+| Gestion de la capacite    | Manuelle via le nombre de Shards               | Automatique selon le trafic                  |
+| Limite ecriture par Shard | 1 Mo par seconde ou 1000 messages par seconde  | Pas de Shard fixe                            |
+| Limite lecture par Shard  | 2 Mo par seconde (partage entre consommateurs) | Dynamique                                    |
+| Retrait des donnees       | De 24 heures (defaut) a 365 jours              | De 24 heures a 365 jours                     |
+| Mode de facturation       | Prix fixe par Shard et par heure               | Prix par Go transfere et par heure           |
+| Consommateurs multiples   | Supporte via le Fan-out standard ou Enhanced   | Supporte via le Fan-out standard ou Enhanced |
+| Cas d usage ideal         | Trafic predictible et stable                   | Trafic variable et inconnu                   |
+
+### 💾 **Backup & Recovery**
+
+##### EC2 Instance recovery
+
+| Element de l instance   | Etat apres recuperation | Precision technique                                            |
+| :---------------------- | :---------------------- | :------------------------------------------------------------- |
+| Instance ID             | Identique               | L instance garde son identifiant unique.                       |
+| Adresse IP Privee       | Identique               | L adresse IP interne ne change pas.                            |
+| Adresse IP Publique     | Identique               | Cas unique : elle est gardee meme sans Elastic IP.             |
+| Elastic IP (EIP)        | Identique               | Si une EIP etait liee, elle reste liee.                        |
+| Metadonnees (Tags, IAM) | Identique               | Tout le profil de l instance est conserve.                     |
+| Placement physique      | Change                  | L instance demarre sur un nouvel hote (Host) sain.             |
+| Memoire vive (RAM)      | Perdue                  | L instance subit un reboot : le cache RAM est vide.            |
+| Statut du volume EBS    | Conserve                | Le disque est detache de l ancien hote et rattache au nouveau. |
+
+
+### 🤔 **Autres services AWS**
+
+##### DMS (Database Migration Service) - Cas d'usage
+
+| Source       | Destination   | Cas d usage Examen                                  |
+| :----------- | :------------ | :-------------------------------------------------- |
+| Amazon S3    | Kinesis / RDS | Charger de l historique + flux continu.             |
+| RDS (Toutes) | Amazon S3     | Creer un Data Lake pour Athena/Redshift.            |
+| On-premises  | AWS (Any)     | Migration hybride ou extension Cloud.               |
+| MongoDB      | DocumentDB    | Migration NoSQL (DMS gere aussi le NoSQL).          |
+| RDS          | OpenSearch    | Indexer des donnees pour de la recherche full-text. |
+
+##### Service PaaS - Comparatif
+
+| Service               | Cas d usage ideal                                | Mot-cle Examen                             |
+| :-------------------- | :----------------------------------------------- | :----------------------------------------- |
+| AWS Amplify           | Applications mobiles et web modernes (React/Vue) | Full-stack, Mobile, Serverless backend     |
+| AWS Elastic Beanstalk | Applications web classiques (Java, PHP, .NET)    | PaaS, Auto Scaling, Full control EC2       |
+| Amazon Lightsail      | Petits projets, blogs ou environnements de test  | VPS, Predictable monthly price, Simplicity |

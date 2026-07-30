@@ -1,0 +1,49 @@
+---
+title: Containers
+sidebar_position: 1
+---
+import { Aside, Badge } from '@astrojs/starlight/components';
+
+### Container command
+#### Lister les containers
+```bash
+docker ps [-a]
+```
+
+
+#### Récupérer le container ID avec le nom de l'image docker
+```bash
+docker-compose ps -q alerta-web
+```
+
+
+
+
+#### Se connecter à un container 
+```bash
+docker exec -i -t 'INSTANCE_ID' bash
+```
+ou
+```bash
+docker exec -it $(docker-compose ps -q alerta-web) bash
+```
+
+
+#### Cibler l'emplacement d'un fichier de log d'un container
+```bash
+docker inspect --format='{{.LogPath}}' $INSTANCE_ID
+```
+
+
+#### Afficher les logs d'un container
+```bash
+docker logs 'INSTANCE_ID'
+```
+
+
+#### Supprimer le storage adossé à un container
+```bash
+rm -Rf /var/lib/docker/volumes/...
+```
+
+

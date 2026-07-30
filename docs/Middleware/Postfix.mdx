@@ -1,0 +1,31 @@
+---
+title: Postfix
+sidebar_position: 2
+---
+import { Aside, Badge } from '@astrojs/starlight/components';
+
+
+### Afficher la mailqueue
+```
+mailq
+```
+ou
+```
+postqueue -p
+```
+
+
+### Purger la mailqueue
+```
+postsuper -d ALL <incoming|active|deferred>
+```
+
+
+### Forcer les envoie de mails
+```
+postqueue -f
+```
+
+
+
+
