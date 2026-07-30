@@ -7,7 +7,7 @@ export default function Home() {
     <Layout title="GitBook">
       <main style={{ padding: '2rem', textAlign: 'center' }}>
         <h1>👋😊 Welcome</h1>
-        <Link className="button button--primary" to="/docs/">
+        <Link className="button button--primary" to="/docs/welcome">
           Get Started
         </Link>
       </main>
