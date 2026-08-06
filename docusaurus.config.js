@@ -21,6 +21,9 @@ const config = {
         hashed: true,
         language: ['fr', 'en'],
         docsRouteBasePath: '/docs',
+        translations: {
+          search_placeholder: 'Rechercher',
+        },
       },
     ],
   ],
@@ -33,7 +36,9 @@ const config = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
         },
-        blog: false,
+        blog: {
+          showReadingTime: true,
+        },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -52,6 +57,7 @@ const config = {
         },
         items: [
           { type: 'docSidebar', sidebarId: 'tutorialSidebar', position: 'left', label: '🎯Wiki' },
+          { to: '/blog', label: '📝Blog', position: 'left' },
           { href: 'https://github.com/codium9/docusaurus', position: 'right', className: 'header-github-link', 'aria-label': 'GitHub' },
         ],
       },
