@@ -59,8 +59,8 @@ const config = {
         ],
       },
       prism: {
-        theme: themes.github,
-        darkTheme: themes.dracula,
+        theme: themes.duotoneLight,
+        darkTheme: themes.duotoneDark,
       },
     }),
 };
