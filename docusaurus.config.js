@@ -14,6 +14,17 @@ const config = {
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
+  plugins: [
+    [
+      require.resolve('@easyops-cn/docusaurus-search-local'),
+      {
+        hashed: true,
+        language: ['fr', 'en'],
+        docsRouteBasePath: '/docs',
+      },
+    ],
+  ],
+
   presets: [
     [
       'classic',
