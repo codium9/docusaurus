@@ -14,6 +14,11 @@ const config = {
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
+  i18n: {
+  defaultLocale: 'fr',
+  locales: ['fr'],
+  },
+
   plugins: [
     [
       require.resolve('@easyops-cn/docusaurus-search-local'),
@@ -21,9 +26,6 @@ const config = {
         hashed: true,
         language: ['fr', 'en'],
         docsRouteBasePath: '/docs',
-        translations: {
-          search_placeholder: 'Rechercher',
-        },
       },
     ],
   ],
