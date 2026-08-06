@@ -7,6 +7,10 @@ on:
   # Permet d'activer le workflow manuellement depuis l'interface GitHub Actions    
   workflow_dispatch:
 
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 permissions:
   contents: read
   pages: write
