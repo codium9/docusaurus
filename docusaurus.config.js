@@ -14,17 +14,12 @@ const config = {
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
-  i18n: {
-  defaultLocale: 'fr',
-  locales: ['fr'],
-  },
-
   plugins: [
     [
       require.resolve('@easyops-cn/docusaurus-search-local'),
       {
         hashed: true,
-        language: ['fr', 'en'],
+        language: ['fr'],
         docsRouteBasePath: '/docs',
       },
     ],
