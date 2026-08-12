@@ -32,6 +32,7 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
+          pagination: false,
         },
         blog: {
           showReadingTime: true,

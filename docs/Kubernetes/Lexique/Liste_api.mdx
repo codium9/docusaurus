@@ -4,46 +4,46 @@ description: Référence des APIs Kubernetes
 sidebar_position: 1
 ---
 
-#### **Charge de travail (Workloads)**
+### Charge de travail (Workloads)
 
-_Pod_ : La plus petite unité déployable dans Kubernetes. Il regroupe un ou plusieurs conteneurs qui partagent le même réseau et le même stockage local.  
-_Deployment_ : Gère le déploiement déclaratif, la mise à jour sans interruption (rolling update) et le retour en arrière (rollback) d'applications sans état (stateless).  
-_ReplicaSet_ : Maintient un nombre garanti de répliques identiques d'un Pod en cours d'exécution à tout moment (généralement piloté par un Deployment).  
-_StatefulSet_ : Gère des Pods avec une identité stable, un stockage persistant dédié et un ordre de déploiement garanti.  
-_DaemonSet_ : Contrôleur Kubernetes qui garantit qu'un Pod spécifique tourne sur tous les nœuds éligibles d'un cluster, ou sur un sous-ensemble défini par des règles de sélection (ex. agents de collecte de logs ou de monitoring).  
-_Job_ : Exécute un ou plusieurs Pods jusqu'à ce qu'une tâche ponctuelle soit terminée avec succès, puis s'arrête.  
-_CronJob_ : Exécute des Jobs de manière récurrente selon une planification temporelle (format cron).  
+**Pod** : La plus petite unité déployable dans Kubernetes. Il regroupe un ou plusieurs conteneurs qui partagent le même réseau et le même stockage local.  
+**Deployment** : Gère le déploiement déclaratif, la mise à jour sans interruption (rolling update) et le retour en arrière (rollback) d'applications sans état (stateless).  
+**ReplicaSet** : Maintient un nombre garanti de répliques identiques d'un Pod en cours d'exécution à tout moment (généralement piloté par un Deployment).  
+**StatefulSet** : Gère des Pods avec une identité stable, un stockage persistant dédié et un ordre de déploiement garanti.  
+**DaemonSet** : Contrôleur Kubernetes qui garantit qu'un Pod spécifique tourne sur tous les nœuds éligibles d'un cluster, ou sur un sous-ensemble défini par des règles de sélection (ex. agents de collecte de logs ou de monitoring).  
+**Job** : Exécute un ou plusieurs Pods jusqu'à ce qu'une tâche ponctuelle soit terminée avec succès, puis s'arrête.  
+**CronJob** : Exécute des Jobs de manière récurrente selon une planification temporelle (format cron).  
 
-#### **Réseau & Exposition (Networking)**
+### Réseau & Exposition (Networking)
 
-_Service_ : Expose un groupe de Pods sous une adresse IP ou un nom DNS stable, en assurant le rééquilibrage de charge (load balancing) interne ou externe.  
-_Ingress_ : Règle de routage HTTP/HTTPS permettant de diriger le trafic externe vers les Services appropriés à l'intérieur du cluster (nécessite un Ingress Controller).  
-_NetworkPolicy_ : Définit les règles de sécurité au niveau réseau (pare-feu) pour autoriser ou bloquer le trafic entre Pods, Espaces de noms (Namespaces) ou adresses externes.  
-_EndpointSlice (et Endpoints)_ : Maintient automatiquement la liste des adresses IP et ports réels des Pods ciblés par un Service.  
+**Service** : Expose un groupe de Pods sous une adresse IP ou un nom DNS stable, en assurant le rééquilibrage de charge (load balancing) interne ou externe.  
+**Ingress** : Règle de routage HTTP/HTTPS permettant de diriger le trafic externe vers les Services appropriés à l'intérieur du cluster (nécessite un Ingress Controller).  
+**NetworkPolicy** : Définit les règles de sécurité au niveau réseau (pare-feu) pour autoriser ou bloquer le trafic entre Pods, Espaces de noms (Namespaces) ou adresses externes.  
+**EndpointSlice (et Endpoints)** : Maintient automatiquement la liste des adresses IP et ports réels des Pods ciblés par un Service.  
 
-#### **Stockage (Storage)**
+### Stockage (Storage)
 
-_PersistentVolume (PV)_ : Ressource de stockage physique ou réseau provisionnée dans le cluster (ex. disque local, NFS, volume cloud).  
-_PersistentVolumeClaim (PVC)_ : Demande de réservation de stockage effectuée par un utilisateur ou un Pod auprès du cluster.  
-_StorageClass_ : Définit des profils ou classes de stockage permettant le provisionnement dynamique de PersistentVolumes.  
+**PersistentVolume (PV)** : Ressource de stockage physique ou réseau provisionnée dans le cluster (ex. disque local, NFS, volume cloud).  
+**PersistentVolumeClaim (PVC)** : Demande de réservation de stockage effectuée par un utilisateur ou un Pod auprès du cluster.  
+**StorageClass** : Définit des profils ou classes de stockage permettant le provisionnement dynamique de PersistentVolumes.  
 
-#### **Configuration & Secrets**
+### Configuration & Secrets
 
-_ConfigMap_ : Stocke des données de configuration non confidentielles (fichiers, variables d'environnement) sous forme de clés-valeurs.  
-_Secret_ : Stocke des informations sensibles (mots de passe, tokens, clés SSH/TLS) encodées en Base64 et isolées des images de conteneurs.  
+**ConfigMap** : Stocke des données de configuration non confidentielles (fichiers, variables d'environnement) sous forme de clés-valeurs.  
+**Secret** : Stocke des informations sensibles (mots de passe, tokens, clés SSH/TLS) encodées en Base64 et isolées des images de conteneurs.  
 
-#### **Identité, Sécurité & Gestion (RBAC & Gouvernance)**
+### Identité, Sécurité & Gestion (RBAC & Gouvernance)
 
-_Namespace_ : Partition virtuelle du cluster permettant d'isoler logiquement les ressources et les équipes les unes des autres.  
-_ServiceAccount_ : Identité attribuée aux processus s'exécutant dans un Pod pour qu'ils puissent s'authentifier auprès de l'API Server Kubernetes.  
-_Role_ : Définit un ensemble de permissions (lecture, écriture, suppression sur des objets) restreint à un Namespace spécifique.  
-_ClusterRole_ : Définit un ensemble de permissions valables sur l'ensemble du cluster ou sur des ressources globales (non liées à un Namespace).  
-_RoleBinding_ : Associe un Role à un utilisateur, un groupe ou un ServiceAccount au sein d'un Namespace.  
-_ClusterRoleBinding_ : Associe un ClusterRole à un utilisateur, un groupe ou un ServiceAccount à l'échelle de tout le cluster.  
+**Namespace** : Partition virtuelle du cluster permettant d'isoler logiquement les ressources et les équipes les unes des autres.  
+**ServiceAccount** : Identité attribuée aux processus s'exécutant dans un Pod pour qu'ils puissent s'authentifier auprès de l'API Server Kubernetes.  
+**Role** : Définit un ensemble de permissions (lecture, écriture, suppression sur des objets) restreint à un Namespace spécifique.  
+**ClusterRole** : Définit un ensemble de permissions valables sur l'ensemble du cluster ou sur des ressources globales (non liées à un Namespace).  
+**RoleBinding** : Associe un Role à un utilisateur, un groupe ou un ServiceAccount au sein d'un Namespace.  
+**ClusterRoleBinding** : Associe un ClusterRole à un utilisateur, un groupe ou un ServiceAccount à l'échelle de tout le cluster.  
 
-#### **Gestion des ressources & Extensibilité**
+### Gestion des ressources & Extensibilité
 
-_ResourceQuota_ : Limite la consommation globale des ressources (CPU, mémoire, nombre d'objets) autorisées au sein d'un Namespace.  
-_LimitRange_ : Définit des contraintes minimales et maximales de ressources (CPU/RAM) appliquées par défaut aux Pods créés dans un Namespace.  
-_HorizontalPodAutoscaler (HPA)_ : Ajuste automatiquement le nombre de répliques d'un Deployment ou StatefulSet en fonction de la charge (utilisation CPU, mémoire ou métriques personnalisées).  
-_CustomResourceDefinition (CRD)_ : Permet d'étendre l'API Kubernetes native en enregistrant de nouveaux types d'objets personnalisés.  
+**ResourceQuota** : Limite la consommation globale des ressources (CPU, mémoire, nombre d'objets) autorisées au sein d'un Namespace.  
+**LimitRange** : Définit des contraintes minimales et maximales de ressources (CPU/RAM) appliquées par défaut aux Pods créés dans un Namespace.  
+**HorizontalPodAutoscaler (HPA)** : Ajuste automatiquement le nombre de répliques d'un Deployment ou StatefulSet en fonction de la charge (utilisation CPU, mémoire ou métriques personnalisées).  
+**CustomResourceDefinition (CRD)** : Permet d'étendre l'API Kubernetes native en enregistrant de nouveaux types d'objets personnalisés.  
