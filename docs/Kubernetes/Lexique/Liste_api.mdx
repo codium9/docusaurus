@@ -1,15 +1,16 @@
 ---
-title: Liste des API
+title: API Kubernetes
+description: Référence des APIs Kubernetes
 sidebar_position: 1
 ---
 
-#### **Charge de travail (Workloads)**
+##### **Charge de travail (Workloads)**
 
 **Pod** : La plus petite unité déployable dans Kubernetes. Il regroupe un ou plusieurs conteneurs qui partagent le même réseau et le même stockage local.  
 **Deployment** : Gère le déploiement déclaratif, la mise à jour sans interruption (rolling update) et le retour en arrière (rollback) d'applications sans état (stateless).  
 **ReplicaSet** : Maintient un nombre garanti de répliques identiques d'un Pod en cours d'exécution à tout moment (généralement piloté par un Deployment).  
-**StatefulSet** : Gère le déploiement d'applications avec état (stateful), en garantissant l'unicité de l'identité des Pods, l'ordre de démarrage et la persistance du stockage associé.  
-**DaemonSet** : S'assure qu'un exemplaire d'un Pod s'exécute sur l'ensemble (ou une sélection) des nœuds du cluster (ex. agents de collecte de logs ou de monitoring).  
+**StatefulSet** : Gère des Pods avec une identité stable, un stockage persistant dédié et un ordre de déploiement garanti.  
+**DaemonSet** : Contrôleur Kubernetes qui garantit qu'un Pod spécifique tourne sur tous les nœuds éligibles d'un cluster, ou sur un sous-ensemble défini par des règles de sélection (ex. agents de collecte de logs ou de monitoring).  
 **Job** : Exécute un ou plusieurs Pods jusqu'à ce qu'une tâche ponctuelle soit terminée avec succès, puis s'arrête.  
 **CronJob** : Exécute des Jobs de manière récurrente selon une planification temporelle (format cron).  
 
