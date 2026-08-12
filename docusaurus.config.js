@@ -60,7 +60,7 @@ const config = {
       },
       prism: {
         theme: themes.github,
-        darkTheme: themes.oceanicNext,
+        darkTheme: themes.dracula,
       },
     }),
 };
