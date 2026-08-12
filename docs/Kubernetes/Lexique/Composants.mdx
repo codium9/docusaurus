@@ -4,7 +4,7 @@ description: Référence des composants Kubernetes
 sidebar_position: 2
 ---
 
-##### **Control Plane (Master)**  
+#### **Control Plane (Master)**  
 
 **kube-apiserver** : Point d'entrée REST unique qui valide et transmet toutes les requêtes du cluster
 **etcd** : Base de données clé-valeur distribuée stockant tout l'état et la configuration du cluster
@@ -12,18 +12,18 @@ sidebar_position: 2
 **kube-controller-manager** : Exécute les boucles de contrôle régulant l'état réel vers l'état désiré (nœuds, réplicas, etc.)
 **cloud-controller-manager (optionnel)** : Fait le lien avec les API d'un fournisseur cloud (Load Balancers, stockage, routes).
 
-##### **Nœuds d'exécution (Workers)**
+#### **Nœuds d'exécution (Workers)**
 
 **Container Runtime (containerd, CRI-O)** : Moteur bas niveau qui télécharge les images et exécute les conteneurs.
 **kubelet** : Agent local s'assurant que les conteneurs décrits dans les spécifications de Pods tournent et restent sains.
 **kube-proxy** : Gère les règles réseau de l'hôte (iptables/IPVS) pour router le trafic vers les bons Pods via les Services.
 
-##### **Extensions indispensables (Addons)**
+#### **Extensions indispensables (Addons)**
 
 **Plugin CNI (Calico, Cilium, Flannel)** : Attribue les adresses IP aux Pods et gère le routage réseau entre tous les nœuds.
 **CoreDNS** : Serveur DNS interne assurant la résolution de noms pour la communication entre Services et Pods.
 
-##### **Outils d'administration**
+#### **Outils d'administration**
 
 **kubeadm** : Outil CLI pour initialiser le cluster, générer les certificats TLS et joindre les nœuds.
 **kubectl** : Client CLI permettant à l'administrateur d'interagir avec l'API Server.
