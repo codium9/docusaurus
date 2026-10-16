@@ -1,0 +1,20 @@
+---
+title: Registry
+sidebar_position: 2
+---
+
+### Paramétrage docker registry
+#### Générer un token b64
+```bash
+read -p "Utilisateur : " user && read -sp "Mot de passe / Token : " pass && echo && echo -n "$user:$pass" | base64 && unset user pass
+```
+
+#### Renseigner le token dans le fichier `.docker/config.json`
+```bash
+{
+  "auths": {
+    "https://docker-registry.example.com": {
+      "auth": "TOKEN_B64"
+    }
+  }
+}
