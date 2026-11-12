@@ -1,0 +1,35 @@
+---
+title: Helm
+description: Commandes utiles pour gérer les charts et releases Helm
+sidebar_position: 2
+---
+
+### Chercher une version précise d'un chart
+
+```bash
+helm search repo <repository/chart> --versions
+```
+
+### Lister les values d'une release
+
+```bash
+helm get values <appli> -n <namespace> > current-values.yaml
+```
+
+### Lister les différences entre 2 fichiers values
+
+Nécessite le plugin helm-diff :
+
+```bash
+helm plugin install https://github.com/databus23/helm-diff
+```
+
+```bash
+helm diff upgrade <release> <repository/chart> --version <x.y.z> -f values.yaml -n <namespace>
+```
+
+### Mettre à jour une release
+
+```bash
+helm upgrade <release> <repository/chart> --version <x.y.z> -f values.yaml -n <namespace>
+```
